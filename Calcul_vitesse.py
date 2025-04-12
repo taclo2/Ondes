@@ -165,7 +165,7 @@ print()
 Pour la suite nous allons choisir le ratio de modes le plus proche de la valeur de la première fréquence
 Pour la deuxième fréquence, nous prenons le prochain mode mode consécutif ayant une valeur similaire
 
-Valeur des vitesse calculer :
+Valeur des vitesses calculées :
 
 J'assume que la première fréquence (329.37) est le premier mode pair soit (n=2, m=2), donc 
 v1 = (329.37*0.48)/(n**2 + m**2)**(1/2) = 55.90 m/s
