@@ -1,3 +1,12 @@
+#Écrire le premier mode
+n1 = 2
+m1 = 2
+
+#Écrire le nombre de fréquence à comparer
+nb_f = 3
+
+#Écrire la longueur de la plaque en mètre
+L = 0.24
 
 #Données à partir du guide d'achat
 frequence_th1 = [345, 1033, 1820, 2041, 3240, 3835]
@@ -8,16 +17,19 @@ frequence_th2 = [263, 362, 585, 697, 775, 990]
 #Données expérimentales
 frequence_exp = [329.37, 484.50, 767.14, 941.16, 1027.50, 1345.50]
 
-#Division des fréquences consécutives
+
+#Division des fréquences consécutives mises au carré et multipliées par 2L
 def ratio_frequence(frequences):
-    #Division des frequence consécutive
     if len(frequences) < 2:
         raise ValueError("La liste doit contenir au moins deux fréquences.")
+    
+    #Division des frequence consécutive
     ratios = []
    
     for i in range(len(frequences) - 1):
-        ratio = frequences[i] / frequences[i + 1]
+        ratio = (frequences[i] / frequences[i + 1])
         ratios.append(ratio)
+
     return ratios
 
 
@@ -51,7 +63,6 @@ def combi_modes(n1, m1, nb_f):
 
         for m in M[i]:
             ajout_m += (m+2, m, m+2)
-
 
         N.append(ajout_n)
         M.append(ajout_m)
@@ -90,7 +101,6 @@ def num(n1, m1, nb_f):
     for clé in b:       
         del mode_num[clé]
 
-
     return mode_num
 
 
@@ -99,13 +109,47 @@ def denum(n1, m1, nb_f):
 
     #Prendre la liste des numérateurs et enlever le premier mode
     mode_denum = dict(list(num(n1, m1, nb_f).items())[1:])
-    
+
     return mode_denum
 
 
+print()
+print("Les valeurs possibles au numérateur :", num(n1, m1, nb_f))
+print()
+print("Les valeurs possibles au dénominateur :", denum(n1, m1, nb_f))
 
-print(combi_modes(2, 2, 2))
+
+#Effectuer la division des modes consécutifs
+def division_mode(n1, m1, nb_f):
+    numerateur = num(n1, m1, nb_f)
+    denominateur = denum(n1, m1, nb_f)
+    division = {}
+
+    for clé_num, valeur_num in numerateur.items():
+        for clé_denum, valeur_denum in denominateur.items():
+            
+            n_num, m_num = clé_num
+            n_denum, m_denum = clé_denum
+
+            #Passer les valeurs égales
+            if clé_num == clé_denum:
+                continue
+            
+            #Considérer uniquement 2 mode consécutif
+            if n_denum > n_num + 2 or m_denum > m_num + 2:
+                continue
+
+            #Enlever les valeurs avec un numérateur supérieur
+            if (n_num + m_num) > (n_denum + m_denum):
+                continue
+
+            calcul = valeur_num / valeur_denum
+            division[(clé_num, clé_denum)] = calcul
+
+    return division
+
 print()
-print(num(2, 2, 2))
+print("Les valeurs de division des modes :", division_mode(n1, m1, nb_f))
 print()
-print(denum(2, 2, 2))
+
+
