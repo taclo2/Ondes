@@ -1,4 +1,4 @@
-#Écrire le premier mode
+#Écrire le premier mode possible selon la géométrie
 n1 = 2
 m1 = 2
 
@@ -143,6 +143,11 @@ def division_mode(n1, m1, nb_f):
             if (n_num + m_num) > (n_denum + m_denum):
                 continue
 
+            #Enlever les valeurs où n_denum est plus petit que n_num
+            #Le mode au dénominateur est toujours le plus grand
+            if n_denum < n_num:
+                continue
+
             calcul = valeur_num / valeur_denum
             division[(clé_num, clé_denum)] = calcul
 
@@ -152,4 +157,24 @@ print()
 print("Les valeurs de division des modes :", division_mode(n1, m1, nb_f))
 print()
 
+#Calcul de vitesse des ondes
+#Fin du code par manque d'idées et d'inspiration
 
+
+"""
+Pour la suite nous allons choisir le ratio de modes le plus proche de la valeur de la première fréquence
+Pour la deuxième fréquence, nous prenons le prochain mode mode consécutif ayant une valeur similaire
+
+Valeur des vitesse calculer :
+
+J'assume que la première fréquence (329.37) est le premier mode pair soit (n=2, m=2), donc 
+v1 = (329.37*0.48)/(n**2 + m**2)**(1/2) = 55.90 m/s
+
+Pour la deuxième fréquence (484.50), j'assume que le mode est (n=2, m=4). Ainsi, la troisième fréquence (767.14) serait le mode (n=4, m=4)
+v2 = (484.50*0.48)/(n**2 + m**2)**(1/2) =  52.00 m/s
+v3 = (767.14*0.48)/(n**2 + m**2)**(1/2) =  65.09 m/s
+
+La quatrième fréquence (941.16) pourrait alors être le mode (n=4 , m=6)
+v4 = (941.16*0.48)/(n**2 + m**2)**(1/2) =  62,64 m/s
+
+"""
