@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+"""
 # Dimensions in meters
 L = 0.75 - 0.0254
 M = 0.75 - 0.0254
@@ -56,3 +57,13 @@ def analytical_solution(x, y, t, gamma, v, s0, L, M, omega):
             sum_result += integral / (L * M)
     
     return sum_result
+"""
+
+
+V = np.array([[1, 2, 3], [3, 4, 5], [5, 6, 7]])
+
+a = V[0, :]
+b = V[:-1, :]
+print(a)
+print(b)
+print(V)
