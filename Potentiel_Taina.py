@@ -120,6 +120,10 @@ for i in range(0, lignes):
   fixe[début_y : fin_y, début_x : fin_x] = True
 
 
+"""
+=========================
+Test pour potentiel fixé
+==========================
 
 print(dynode_bas)
 print(dynode_haut)
@@ -127,4 +131,46 @@ print(dynode_haut)
 plt.imshow(fixe, cmap="gray", origin='lower')
 plt.title("Zones de potentiel fixé")
 plt.colorbar()
+plt.show()
+"""
+
+
+# ====================================
+# Méthode de relaxation par le Jacobi
+# ====================================
+
+# Fonction qui effectue une itération de la méthode de Jacobi
+# Approxime la solution de l'équation (nabla^2*V = 0 et Conditions Dirichelts)
+
+def jacobi(V, fixe):
+    V_new = V.copy()
+    V_new[1:-1, 1:-1] = 0.25 * (V[1:-1, 2:] + V[1:-1, :-2] + V[2:, 1:-1] + V[:-2, 1:-1])
+    V_new[fixe] = V[fixe]
+    return V_new
+
+#Boucle d'itération jusqu'à la convergence
+def iter_jacobi(V, fixe, max_iter=10000, tol=1e-4):
+
+  for i in range(max_iter):
+      V_new = jacobi(V, fixe)
+    
+      if np.max(np.abs(V_new - V)) < tol:
+          print(f"{i} itérations")
+          break
+      V = V_new
+
+  return V
+
+# Prendre le résultat des itérations
+V_final = iter_jacobi(V, fixe)
+
+
+# =================================
+# Affichage graphique du potentiel
+# =================================
+plt.imshow(V_final, origin='lower', cmap='inferno')
+plt.colorbar(label='Potentiel (V)')
+plt.title("Potentiel électrostatique (méthode de Jacobi)")
+plt.xlabel("x")
+plt.ylabel("y")
 plt.show()
