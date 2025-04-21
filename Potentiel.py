@@ -22,53 +22,37 @@ V(x, y) = (1/4*pi*epsilon_o)[intégrale](dx'*dy'/(x**2 + y**2)**0.5)
 =======================================
 """
 
-#Paramètre du Graphique
-# Point d'observation
-r_max = 2
-z_max = 10
-M = 41
-r_cyl = np.linspace(r_max/M, r_max, M)
-z = np.linspace(-z_max/2, z_max/2, M)
-R,Z = np.meshgrid(r_cyl, z)
+# =============================
+# Paramètres géométriques du PM 
+# =============================
 
-V_ligne = R*0
+N_dynodes = 4  # Nombre de Dynodes
+a = 3.0        # Espace extérieur en x
+b = 2.0        # Espace extérieur en y
+c = 4.0        # Longueur des dynodes en x
+d = 2.0        # Espace entre les dynodes
+e = 0.2        # Largeur des dynodes en y
+f = 6.0        # Hauteur du PM en y
 
-# Ligne de charge
-q_total = 1
+# Les dynodes du haut doivent être centrées sur l’espacement entre les dynodes du bas
+espace_centré = c/2 - d/2
 
-L = 4        # Grandeur de la ligne
-N = 101        # Nombre de sources discrètes sur la ligne
-Z_prime = np.linspace(-L/2, L/2, N, endpoint=False )
-dz_prime = Z_prime[1] - Z_prime[0]
+# Décalage sur la 1ère dynode du haut pour quelle soit vis-à-vis l'espace
+g = c - espace_centré
 
-densite_charge = q_total/L
-dq = densite_charge * dz_prime
+# Longueur totale du PM (en x)
+longueur = 2*a + g + c*N_dynodes/2 + d*(N_dynodes/2 - 1)
 
-# Pour simplifier, je suppose que 1/(4 pi epsilon_o) = 1
-for z_prime in Z_prime:
-  r = np.sqrt((Z-z_prime)*(Z-z_prime)+R*R)
-  V_ligne += -dq/r
+# Hauteur totale du PM (en y)
+hauteur = f
 
-dVdz = np.zeros(V_ligne.shape)
-for i in range(1,V_ligne.shape[0]-1):
-  for j in range(V_ligne.shape[1]):
-    dz = Z[i+1,j]-Z[i-1,j]
-    dV = (V_ligne[i+1,j]-V_ligne[i-1,j])
-    dVdz[i,j] = dV/dz
 
-dVdr = np.zeros(V_ligne.shape)
-for i in range(1,V_ligne.shape[0]-1):
-  for j in range(1, V_ligne.shape[1]-1):
-    dr = R[i,j+1]-R[i,j-1]
-    dV = (V_ligne[i,j+1]-V_ligne[i,j-1])
-    dVdr[i,j] = dV/dr
+# ================================
+# Points de discrétisation par mm
+# ================================
 
-lengths = np.sqrt(dVdz*dVdz + dVdr*dVdr)
-percentile_10th = np.percentile(lengths, 10)
-percentile_90th = np.percentile(lengths, 90)
-colors = np.clip(lengths, a_min=percentile_10th, a_max=percentile_90th)
+n = 10  # Dimention en nombre de points pour la grille
+X = (longueur*n)
+Y = (hauteur*n)
 
-plt.contourf(R, Z, V_ligne, cmap = 'viridis_r')
-plt.title("Potentiel")
-plt.colorbar()
-plt.show()
+print(f"En x: {X} points, En y: {Y} points")

@@ -108,6 +108,23 @@ plt.legend()
 # Nom de l'axe des abscisses
 plt.xlabel('$x$')  # le $...$ permet l’écriture mathématique avec LaTeX
 
-
-plt.savefig("Exemple_3.pdf")
 plt.show()
+
+
+#====================
+#Exemple 4 : Meshgrid
+#====================
+
+x = np.array([3, 4, 7])
+y = np.array([-1, 0])
+X, Y = np.meshgrid(x, y)
+
+"""
+X
+array([[3, 4, 7],
+       [3, 4, 7]])
+
+Y
+array([[-1, -1, -1],
+       [ 0,  0,  0]])
+"""
