@@ -26,7 +26,7 @@ V(x, y) = (1/4*pi*epsilon_o)[intégrale](dx'*dy'/(x**2 + y**2)**0.5)
 # Paramètres géométriques du PM 
 # =============================
 
-N_dynodes = 6  # Nombre de Dynodes
+N_dynodes = 4  # Nombre de Dynodes
 a = 3.0        # Espace extérieur en x
 b = 2.0        # Espace extérieur en y
 c = 4.0        # Longueur des dynodes en x
@@ -60,7 +60,7 @@ print(f"En x: {n_x} points, En y: {n_y} points")
 # Initialisation de la grille
 # ============================
 
-V = np.zeros((n_x, n_y))
+V = np.zeros((n_y, n_x))
 # Masque pour fixé le potentiel (True = fixé)
 fixe = np.zeros_like(V, dtype=bool)
 
@@ -85,21 +85,46 @@ lignes = int(N_dynodes/2)
 # Pour stocker les positions
 dynode_bas = {}  
 dynode_haut = {}
-  
-# Emplacement en x des dynodes du bas
-for i in range(1, lignes + 1):
-  début = int((a + c*(i-1) + d*(i-1)) * n)
-  fin = int((a + c*(i) + d*(i-1)) * n)
-  y = int(b)
-  dynode_bas[i] = (début, fin, y)
 
-# Emplacement en x des dynodes du bas
-for i in range(1, lignes + 1):
-  début = int((a + g + c*(i-1) + d*(i-1)) * n)
-  fin = int((a + c*(i) + d*(i-1)) * n)
-  y = int(f - b)
-  dynode_haut[i] = (début, fin, y)
+
+# Pour fixé le potentiel V[début_i : fin_i, début_j, fin_j] où i-> y et j-> x
+# Emplacement des dynodes du bas
+for i in range(0, lignes):
+
+  début_x = int((a + c*(i) + d*(i)) * n)
+  fin_x = int((a + c*(i+1) + d*(i)) * n)
+
+  début_y = int(b * n)
+  fin_y = int((b + e) * n)
+  
+  dynode_bas[i+1] = [(début_x, fin_x), (début_y, fin_y)]
+
+  #Fixé le Potentiel
+  V[début_y : fin_y, début_x : fin_x] = 100 + (i)*200
+  fixe[début_y : fin_y, début_x : fin_x] = True
+
+
+# Emplacement des dynodes du haut
+for i in range(0, lignes):
+
+  début_x = int((a + g + c*(i) + d*(i)) * n)
+  fin_x = int((a + g + c*(i+1) + d*(i)) * n)
+
+  début_y = int((f - b - e) * n)
+  fin_y = int((f - b) * n)
+
+  dynode_haut[i+1] = [(début_x, fin_x), (début_y, fin_y)]
+  
+  #Fixé le Potentiel
+  V[début_y : fin_y, début_x : fin_x] = 200 + (i)*200
+  fixe[début_y : fin_y, début_x : fin_x] = True
+
 
 
 print(dynode_bas)
 print(dynode_haut)
+
+plt.imshow(fixe, cmap="gray", origin='lower')
+plt.title("Zones de potentiel fixé")
+plt.colorbar()
+plt.show()
