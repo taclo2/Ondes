@@ -168,9 +168,9 @@ V_final = iter_jacobi(V, fixe)
 # =================================
 # Affichage graphique du potentiel
 # =================================
-plt.imshow(V_final, origin='lower', cmap='inferno')
+plt.imshow(V_final, origin='lower', cmap='plasma', extent=[0, longueur, 0, hauteur])
 plt.colorbar(label='Potentiel (V)')
-plt.title("Potentiel électrostatique (méthode de Jacobi)")
+plt.title("Potentiel électrostatique dans le tube PM")
 plt.xlabel("x")
 plt.ylabel("y")
 plt.show()
