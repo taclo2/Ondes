@@ -1,32 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-'''
+"""
+===================
 Les valeurs connues
-=======================================
+===================
 dynode1 = 100
 dynode2 = 200
 dynode3 = 300
 dynode4 = 400
 epsilon_o = 8.85 * 10^-12
-=======================================
-'''
 
-"""
+
+=====================
 Calcul du potentiel
-=======================================
+=====================
 Nous savons que pour une surface Q = A * densité
 ou encore Q = sigma * da'
 
-V(x, y) = (1/4*pi*epsilon_o)[intégrale](dx'*dy'/(x**2 + y**2)**0.5)
-=======================================
+V(x, y) = 
 """
+
 
 # =============================
 # Paramètres géométriques du PM 
 # =============================
 
-N_dynodes = 8  # Nombre de Dynodes
+N_dynodes = 4  # Nombre de Dynodes
 a = 3.0        # Espace extérieur en x
 b = 2.0        # Espace extérieur en y
 c = 4.0        # Longueur des dynodes en x
@@ -51,7 +51,8 @@ hauteur = f
 # Points de discrétisation par mm
 # ================================
 
-n = 10  # Dimention en nombre de points pour la grille
+ # Dimention en nombre de points pour la grille
+n = 10 
 n_x, n_y = int(longueur*n), int(hauteur*n)
 print(f"En x: {n_x} points, En y: {n_y} points")
 
@@ -59,8 +60,8 @@ print(f"En x: {n_x} points, En y: {n_y} points")
 # ============================
 # Initialisation de la grille
 # ============================
-
 V = np.zeros((n_y, n_x))
+
 # Masque pour fixé le potentiel (True = fixé)
 fixe = np.zeros_like(V, dtype=bool)
 
@@ -174,3 +175,46 @@ plt.title("Potentiel électrostatique dans le tube PM")
 plt.xlabel("x (mm)")
 plt.ylabel("y (mm)")
 plt.show()
+
+
+"""
+===========================
+Calcul du champ électrique
+===========================
+E = -gradian(V(x, y))
+"""
+
+
+#=================================
+# Grille pour le champs électrique
+#=================================
+x = np.linspace(0, longueur)
+y = np.linspace(0, hauteur)
+X, Y = np.meshgrid(x, y)
+
+
+#===================
+# Champs électrique
+#===================
+dVdy, dVdx = np.gradient(V_final)
+Ex, Ey = (-dVdx, -dVdy)
+
+
+
+
+#=====================
+# Affichage graphique
+#=====================
+
+
+norme = np.sqrt(dVdx*dVdx + dVdy*dVdy)
+
+
+
+
+plt.title("Champ électrique dans le tube PM")
+plt.xlabel("x (mm)")
+plt.ylabel("y (mm)")
+plt.colorbar()
+plt.show()
+
