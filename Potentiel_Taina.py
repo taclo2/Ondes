@@ -26,7 +26,7 @@ V(x, y) = (1/4*pi*epsilon_o)[intégrale](dx'*dy'/(x**2 + y**2)**0.5)
 # Paramètres géométriques du PM 
 # =============================
 
-N_dynodes = 12  # Nombre de Dynodes
+N_dynodes = 8  # Nombre de Dynodes
 a = 3.0        # Espace extérieur en x
 b = 2.0        # Espace extérieur en y
 c = 4.0        # Longueur des dynodes en x
@@ -168,8 +168,8 @@ V_final = iter_jacobi(V, fixe)
 # =================================
 # Affichage graphique du potentiel
 # =================================
-plt.imshow(V_final, origin='lower', cmap='Reds', extent=[0, longueur, 0, hauteur])
-plt.colorbar(label='Potentiel (V)')
+plt.imshow(V_final, origin='lower', cmap='viridis', extent=[0, longueur, 0, hauteur])
+plt.colorbar(label='Potentiel (V)', location='bottom')
 plt.title("Potentiel électrostatique dans le tube PM")
 plt.xlabel("x (mm)")
 plt.ylabel("y (mm)")
