@@ -189,8 +189,8 @@ np.linspace(start, stop, num)
 """
 
 x = np.linspace(0, V.shape[1]-1, V.shape[1]) # De 0 à x-1
-y = np.linspace(0, V.shape[0]-1, V.shape[0])
-X, Y = np.meshgrid(x*1/n, y*1/n)
+y = np.linspace(0, V.shape[0]-1, V.shape[0]) # De 0 à y-1
+X, Y = np.meshgrid(x, y)
 
 
 #==================
@@ -198,7 +198,7 @@ X, Y = np.meshgrid(x*1/n, y*1/n)
 #==================
 
 #np.gradiant renvoie [x, y]
-Ex, Ey = np.gradient(-V_final)
+Ey, Ex = np.gradient(-V_final)
 
 
 #====================
@@ -208,20 +208,22 @@ Ex, Ey = np.gradient(-V_final)
 # Pour normaliser les vecteurs
 E_norm = np.sqrt(Ex**2 + Ey**2)
 
-Ex_norm = Ex / E_norm
-Ey_norm = Ey / E_norm
-
+# Pour éviter les divisions par zéro
+E_norm[E_norm == 0] = 1
+Ex_unit = Ex / E_norm
+Ey_unit = Ey / E_norm
 
 #Paramètre d'affichage des flèches
-nb = 2
+nb = 3
 
+percentile_10th = np.percentile(E_norm, 10)
+percentile_90th = np.percentile(E_norm, 90)
+colors = np.clip(E_norm, a_min=percentile_10th, a_max=percentile_90th)
 
-
-plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_norm[::nb, ::nb], Ey_norm[::nb, ::nb], scale=30, cmap='viridis')
-
-plt.title("Champ électrique dans le tube PM")
-plt.xlabel("x (mm)")
-plt.ylabel("y (mm)")
+plt.figure(figsize= (longueur, hauteur))
+plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma")
+plt.title("Champ électrique")
 plt.colorbar()
 plt.show()
+
 
