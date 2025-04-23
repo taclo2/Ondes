@@ -51,7 +51,7 @@ hauteur = f
 # Points de discrétisation par mm
 # ================================
 
- # Dimention en nombre de points pour la grille
+# n représente la résolution, nombre de pixel par mm
 n = 10 
 n_x, n_y = int(longueur*n), int(hauteur*n)
 print(f"En x: {n_x} points, En y: {n_y} points")
@@ -177,40 +177,47 @@ plt.ylabel("y (mm)")
 plt.show()
 
 
-"""
-===========================
-Calcul du champ électrique
-===========================
-E = -gradian(V(x, y))
-"""
-
-
 #=================================
 # Grille pour le champs électrique
 #=================================
-x = np.linspace(0, longueur)
-y = np.linspace(0, hauteur)
-X, Y = np.meshgrid(x, y)
+
+"""
+V.shape[1] est la dimention de l'axe horizontale
+V.shape[0] est la dimention de l'axe verticale
+Par exemple V = np.zeros((2, 4)) alors V.shape donne (2, 4)
+np.linspace(start, stop, num)
+"""
+
+x = np.linspace(0, V.shape[1]-1, V.shape[1]) # De 0 à x-1
+y = np.linspace(0, V.shape[0]-1, V.shape[0])
+X, Y = np.meshgrid(x*1/n, y*1/n)
 
 
-#===================
+#==================
 # Champs électrique
-#===================
-dVdy, dVdx = np.gradient(V_final)
-Ex, Ey = (-dVdx, -dVdy)
+#==================
+
+#np.gradiant renvoie [x, y]
+Ex, Ey = np.gradient(-V_final)
 
 
-
-
-#=====================
+#====================
 # Affichage graphique
-#=====================
+#====================
+
+# Pour normaliser les vecteurs
+E_norm = np.sqrt(Ex**2 + Ey**2)
+
+Ex_norm = Ex / E_norm
+Ey_norm = Ey / E_norm
 
 
-norme = np.sqrt(dVdx*dVdx + dVdy*dVdy)
+#Paramètre d'affichage des flèches
+nb = 2
 
 
 
+plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_norm[::nb, ::nb], Ey_norm[::nb, ::nb], scale=30, cmap='viridis')
 
 plt.title("Champ électrique dans le tube PM")
 plt.xlabel("x (mm)")
