@@ -47,9 +47,9 @@ longueur = 2*a + g + c*N_dynodes/2 + d*(N_dynodes/2 - 1)
 hauteur = f
 
 
-# ================================
+# ===============================
 # Points de discrétisation par mm
-# ================================
+# ===============================
 
 # n représente la résolution, nombre de pixel par mm
 n = 10 
@@ -150,7 +150,7 @@ def jacobi(V, fixe):
     return V_new
 
 #Boucle d'itération jusqu'à la convergence
-def iter_jacobi(V, fixe, max_iter=10000, tol=1e-4):
+def iter_jacobi(V, fixe, max_iter=10000, tol=1e-2):
 
   for i in range(max_iter):
       V_new = jacobi(V, fixe)
@@ -197,8 +197,9 @@ X, Y = np.meshgrid(x, y)
 # Champs électrique
 #==================
 
-#np.gradiant renvoie [x, y]
-Ey, Ex = np.gradient(-V_final)
+# np.gradiant renvoie [x, y]
+# Metre 1/n pour avoir la valeur à la bonne échelle
+Ey, Ex = np.gradient(-V_final, 1/n, 1/n)
 
 
 #====================
@@ -209,27 +210,24 @@ Ey, Ex = np.gradient(-V_final)
 E_norm = np.sqrt(Ex**2 + Ey**2)
 
 # Pour éviter les divisions par zéro
-E_norm[E_norm == 0] = 1
+E_norm[E_norm == 0] = 1e-5
 Ex_unit = Ex / E_norm
 Ey_unit = Ey / E_norm
 
-#Paramètre d'affichage des flèches
+# Paramètre d'affichage des flèches
 nb = 3
 
 percentile_10th = np.percentile(E_norm, 10)
 percentile_90th = np.percentile(E_norm, 90)
 colors = np.clip(E_norm, a_min=percentile_10th, a_max=percentile_90th)
 
-
-
-
-
+# Paramètre graphique
 plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma")
 plt.title("Champ électrique dans le tube PM")
 plt.colorbar(label='Champs Électrique (V)', location='bottom')
-plt.axis("equal")
 
-plt.axis([0, longueur, 0, hauteur])   
+plt.axis("equal")
+ 
 plt.xlabel("x (mm)")
 plt.ylabel("y (mm)")
 plt.show()
