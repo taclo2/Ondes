@@ -188,8 +188,8 @@ Par exemple V = np.zeros((2, 4)) alors V.shape donne (2, 4)
 np.linspace(start, stop, num)
 """
 
-x = np.linspace(0, V.shape[1]-1, V.shape[1]) # De 0 à x-1
-y = np.linspace(0, V.shape[0]-1, V.shape[0]) # De 0 à y-1
+x = np.linspace(0, longueur, V.shape[1]) 
+y = np.linspace(0, hauteur, V.shape[0]) 
 X, Y = np.meshgrid(x, y)
 
 
@@ -220,10 +220,22 @@ percentile_10th = np.percentile(E_norm, 10)
 percentile_90th = np.percentile(E_norm, 90)
 colors = np.clip(E_norm, a_min=percentile_10th, a_max=percentile_90th)
 
-plt.figure(figsize= (longueur, hauteur))
+
+
+
+
 plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma")
-plt.title("Champ électrique")
-plt.colorbar()
+plt.title("Champ électrique dans le tube PM")
+plt.colorbar(label='Champs Électrique (V)', location='bottom')
+plt.axis("equal")
+
+plt.axis([0, longueur, 0, hauteur])   
+plt.xlabel("x (mm)")
+plt.ylabel("y (mm)")
 plt.show()
+
+
+
+
 
 
