@@ -222,7 +222,7 @@ percentile_90th = np.percentile(E_norm, 90)
 colors = np.clip(E_norm, a_min=percentile_10th, a_max=percentile_90th)
 
 # Paramètre graphique
-plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma")
+plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma_r")
 plt.title("Champ électrique dans le tube PM")
 plt.colorbar(label='Champs Électrique (V)', location='bottom')
 
@@ -233,6 +233,24 @@ plt.ylabel("y (mm)")
 plt.show()
 
 
+#=============================
+# Graphique Champs + Potentiel
+#=============================
+
+# Affichage du potentiel (fond pâle)
+plt.imshow(V_final, origin='lower', cmap='viridis', extent=[0, longueur, 0, hauteur], alpha=0.8)
+plt.colorbar(label='Potentiel (V)', location='bottom')
+
+# Champ électrique par-dessus
+plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma_r")
+plt.colorbar(label="Champ Électrique (V/m)", location='bottom')
+
+# Axes et titre
+plt.title("Champ électrique superposé au potentiel")
+plt.xlabel("x (mm)")
+plt.ylabel("y (mm)")
+
+plt.show()
 
 
 
