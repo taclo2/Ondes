@@ -52,7 +52,7 @@ hauteur = f
 # ===============================
 
 # n représente la résolution, nombre de pixel par mm
-n = 10 
+n = 10
 n_x, n_y = int(longueur*n), int(hauteur*n)
 print(f"En x: {n_x} points, En y: {n_y} points")
 
@@ -215,7 +215,7 @@ Ex_unit = Ex / E_norm
 Ey_unit = Ey / E_norm
 
 # Paramètre d'affichage des flèches
-nb = 3
+nb = 4
 
 percentile_10th = np.percentile(E_norm, 10)
 percentile_90th = np.percentile(E_norm, 90)
@@ -238,11 +238,11 @@ plt.show()
 #=============================
 
 # Affichage du potentiel (fond pâle)
-plt.imshow(V_final, origin='lower', cmap='viridis', extent=[0, longueur, 0, hauteur], alpha=0.8)
+plt.imshow(V_final, origin='lower', cmap='plasma', extent=[0, longueur, 0, hauteur], alpha=0.7)
 plt.colorbar(label='Potentiel (V)', location='bottom')
 
 # Champ électrique par-dessus
-plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma_r")
+plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="viridis_r")
 plt.colorbar(label="Champ Électrique (V/m)", location='bottom')
 
 # Axes et titre
@@ -255,3 +255,74 @@ plt.show()
 
 
 
+"""
+==============================
+Calcul en lien avec l'électron
+==============================
+
+Force sur l'électron dans un champs E
+F = qE(x, y)
+
+2e loi de newton
+F = ma
+(d"x/dt") = qE_x/m
+(d"y/dt") = qE_y/m
+
+ --- constantes physiques ---
+q = -1.6022e-19 Coulombs
+m =  9.1094e-31 kg
+
+Utiliser la méthode d'euleur
+-----------------------------
+Déterminer la position x(t)
+Condition initiale de x(t=0) et v(t=0)
+
+Conditions initiales
+--------------------
+x = 0 (Selon mes axes cela correspond à x = 3)
+y = 0  
+v_x = 0
+v_y = 0
+"""
+
+#=========================
+#Trajectoire de l'électron
+#=========================
+
+# Direction du rebond sur la dynode
+# Dictionnaire {dynode#: y + 2 ou y - 2}
+bounce = {}
+
+for i in range(1, N_dynodes+1):
+  div = i % 2
+
+  if div == 0:
+    bounce[i] = -2
+
+  else:
+    bounce[i] = 2
+
+print(bounce)
+  
+   
+
+
+
+def euler_electron_2D(E, r_init, v_init):
+   """
+        Intègre la trajectoire de l'électron dans le tube PM.
+        Lorsqu'il y a collision, l'électron rebondit verticalement de 2 mm 
+        (la position y de la position est modifiée de ±2 mm et v_y change de direction).
+        
+        Paramètres:
+          - E: champ électrique.
+          - r_init: vecteur de la position initiale (x, y).
+          - v_init: vitesse initiale (v_x, v_y).
+          - t: temps.
+          - n: nombre d'itérations.
+          - store_every: intervalle pour stocker les positions.
+          - dynodes: liste de dictionnaires définissant les zones de dynode et le sens du rebond.
+        
+        Retourne:
+          - pos: tableau des positions enregistrées.
+      """
