@@ -304,25 +304,32 @@ for i in range(1, N_dynodes+1):
 
 print(bounce)
   
-   
 
-
-
-def euler_electron_2D(E, r_init, v_init):
-   """
-        Intègre la trajectoire de l'électron dans le tube PM.
-        Lorsqu'il y a collision, l'électron rebondit verticalement de 2 mm 
-        (la position y de la position est modifiée de ±2 mm et v_y change de direction).
+def euler_electron_2D(Ex, Ey, r_init, v_init):
+  """
+  Intègre la trajectoire de l'électron dans le tube PM.
+  Lorsqu'il y a collision, l'électron rebondit verticalement de 2 mm 
+  (la position y de la position est modifiée de ±2 mm et v_y change de direction).
         
-        Paramètres:
-          - E: champ électrique.
-          - r_init: vecteur de la position initiale (x, y).
-          - v_init: vitesse initiale (v_x, v_y).
-          - t: temps.
-          - n: nombre d'itérations.
-          - store_every: intervalle pour stocker les positions.
-          - dynodes: liste de dictionnaires définissant les zones de dynode et le sens du rebond.
+  Paramètres:
+  - E: champ électrique
+  - r_init: vecteur de la position initiale (x, y)
+  - v_init: vitesse initiale (v_x, v_y)
+  - t: temps
+  - n: nombre d'itérations
+  - store: intervalle pour stocker les positions
+  - dynodes: liste de dictionnaires définissant les zones de dynode et le sens du rebond
         
-        Retourne:
-          - pos: tableau des positions enregistrées.
-      """
+  Retourne:
+  - position: Matrice des positions
+  """
+  q = -1.6022e-19 
+  m =  9.1094e-31
+
+
+  # Calcul de l'accélération : a = (q_e/m_e)*E
+  for k in range(n):
+    Ex, Ey = E(r)
+    a_val = (q_e / m_e) * np.array([Ex, Ey])
+    v = v + h * a_val
+    r = r + h * v
