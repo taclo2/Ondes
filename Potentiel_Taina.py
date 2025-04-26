@@ -11,14 +11,10 @@ dynode3 = 300
 dynode4 = 400
 epsilon_o = 8.85 * 10^-12
 
-
-=====================
+===================
 Calcul du potentiel
-=====================
-Nous savons que pour une surface Q = A * densité
-ou encore Q = sigma * da'
-
-V(x, y) = 
+===================
+Avec la méthode itérative pour V(x, y)
 """
 
 
@@ -215,7 +211,7 @@ Ex_unit = Ex / E_norm
 Ey_unit = Ey / E_norm
 
 # Paramètre d'affichage des flèches (adaptatives)
-# Points par flèche
+# Intervale des flèches
 nb = 6 + N_dynodes//6
 
 percentile_10th = np.percentile(E_norm, 10)
@@ -239,12 +235,12 @@ plt.show()
 #=============================
 
 # Affichage du potentiel (fond pâle)
-plt.imshow(V_final, origin='lower', cmap='plasma', extent=[0, longueur, 0, hauteur], alpha=0.7)
-plt.colorbar(label='Potentiel (V)', location='bottom')
+plt.imshow(V_final, origin='lower', cmap='plasma', extent=[0, longueur, 0, hauteur], alpha=0.5)
+plt.colorbar(label='Potentiel (V)', location='bottom', shrink=0.8, aspect=20)
 
 # Champ électrique par-dessus
 plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="viridis_r")
-plt.colorbar(label="Champ Électrique (V/m)", location='bottom')
+plt.colorbar(label="Champ Électrique (V/m)", location='bottom', shrink=0.8, aspect=20)
 
 # Axes et titre
 plt.title("Champ électrique superposé au potentiel")
@@ -326,10 +322,3 @@ def euler_electron_2D(Ex, Ey, r_init, v_init):
   """
   q = -1.6022e-19 
   m =  9.1094e-31
-
-
-  # Calcul de l'accélération : a = (q/m)*E
-  for k in range(n):
-    a_val = (q / m) * np.array([Ex, Ey])
-    v = v + h * a_val
-    r = r + h * v
