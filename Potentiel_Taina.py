@@ -52,7 +52,7 @@ hauteur = f
 # ===============================
 
 # n représente la résolution, nombre de pixel par mm
-n = 10
+n = 20
 n_x, n_y = int(longueur*n), int(hauteur*n)
 print(f"En x: {n_x} points, En y: {n_y} points")
 
@@ -214,8 +214,9 @@ E_norm[E_norm == 0] = 1e-5
 Ex_unit = Ex / E_norm
 Ey_unit = Ey / E_norm
 
-# Paramètre d'affichage des flèches
-nb = 4
+# Paramètre d'affichage des flèches (adaptatives)
+# Points par flèche
+nb = 6 + N_dynodes//6
 
 percentile_10th = np.percentile(E_norm, 10)
 percentile_90th = np.percentile(E_norm, 90)
@@ -224,7 +225,7 @@ colors = np.clip(E_norm, a_min=percentile_10th, a_max=percentile_90th)
 # Paramètre graphique
 plt.quiver(X[::nb, ::nb], Y[::nb, ::nb], Ex_unit[::nb, ::nb], Ey_unit[::nb, ::nb], colors[::nb, ::nb], cmap="plasma_r")
 plt.title("Champ électrique dans le tube PM")
-plt.colorbar(label='Champs Électrique (V)', location='bottom')
+plt.colorbar(label='Champs Électrique (V/m)', location='bottom')
 
 plt.axis("equal")
  
@@ -279,8 +280,8 @@ Condition initiale de x(t=0) et v(t=0)
 
 Conditions initiales
 --------------------
-x = 0 (Selon mes axes cela correspond à x = 3)
-y = 0  
+x = 0 
+y = 0 (Selon mes axes cela correspond à y = 3)
 v_x = 0
 v_y = 0
 """
@@ -327,9 +328,8 @@ def euler_electron_2D(Ex, Ey, r_init, v_init):
   m =  9.1094e-31
 
 
-  # Calcul de l'accélération : a = (q_e/m_e)*E
+  # Calcul de l'accélération : a = (q/m)*E
   for k in range(n):
-    Ex, Ey = E(r)
-    a_val = (q_e / m_e) * np.array([Ex, Ey])
+    a_val = (q / m) * np.array([Ex, Ey])
     v = v + h * a_val
     r = r + h * v
